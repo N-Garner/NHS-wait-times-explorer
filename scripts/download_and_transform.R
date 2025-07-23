@@ -397,7 +397,11 @@ if (!file.exists("output_data/icb-boundaries.geojson")) {
 }
 
 ## This file unfortunately needs to be downloaded manually 
-## Extract all files into output_data/2022Elective_FPTP_Full
-"https://app.box.com/s/qh8gzpzeo1firv1ezfxx2e6c4tgtrudl/folder/170910088405?download=1"
 ## This can be found through a dashboard at: https://www.eastsussexjsna.org.uk/resources/nhs-acute-hospital-trust-catchment-populations/ 
-
+message(
+  "Please download & extract manually:\n",
+  "  1. Open: https://app.box.com/s/qh8gzpzeo1firv1ezfxx2e6c4tgtrudl/folder/170910088405 \n",
+  "  2. Follow the link to the Box folder, download the 2022Elective_FPTP_Full folder as .zip\n",
+  "  3. Extract into: ", normalizePath("output_data/2022Elective_FPTP_Full", mustWork = FALSE), "\n\n",
+  "The app will not run untill files are present."
+)
