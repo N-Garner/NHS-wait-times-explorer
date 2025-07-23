@@ -178,14 +178,6 @@ Spotted an error? Feature idea?
 
 ------------------------------------------------------------------------
 
-## 11. Session info
-
-```{r}
-sessionInfo()
-```
-
-------------------------------------------------------------------------
-
 ### Appendix: Handy links
 
 -   [NHS RTT statistics portal](https://www.england.nhs.uk/statistics/statistical-work-areas/rtt-waiting-times/rtt-data-2025-26/)\
