@@ -24,7 +24,6 @@ Jump to the live app (link coming), browse the docs for methods and licensing, o
 
 - `scripts/` – data download & transformation.
 - `app/` – Shiny app (`app.R`).
-- `output_data/` – derived RDS files (ignored in git unless small).
 - `docs/` – rendered R Markdown site (GitHub Pages).
 - `renv/` & `renv.lock` – reproducible R environment.
 
