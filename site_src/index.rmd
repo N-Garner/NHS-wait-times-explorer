@@ -19,7 +19,7 @@ params:
   repo_url: "https://github.com/N-Garner/NHS-wait-times-explorer"
   project_site: "https://n-garner.github.io/NHS-wait-times-explorer/"
   manual_zip_url: "https://app.box.com/s/qh8gzpzeo1firv1ezfxx2e6c4tgtrudl/folder/170910088405"
-  manual_zip_path: "Output_Data/2022Elective_FPTP_Full"
+  manual_zip_path: "output_data/2022Elective_FPTP_Full"
 ---
 
 ```{r setup, include=FALSE}
@@ -30,34 +30,64 @@ knitr::opts_chunk$set(
 library(glue)
 ```
 
+<!-- ===================== CUSTOM STYLES ===================== -->
+
+```{=html}
+<style>
+body{font-size:16px;line-height:1.55;color:#333;}
+h1.title{margin-bottom:.25em;}
+.subtitle{color:#6c757d;margin-bottom:1.5em;}
+
+/* nicer horizontal rules between sections */
+hr.section-split{border:0;border-top:1px solid #e5e5e5;margin:40px 0 32px;}
+
+/* TLDR box */
+.tldr-box{background:#f8f9fa;border-left:4px solid #0d6efd;padding:14px 18px;margin:20px 0 28px;box-shadow:0 1px 2px rgba(0,0,0,.05);} 
+.tldr-box ul{margin-bottom:0;}
+
+/* callouts for interpretation/suppression if desired */
+.callout{border-left:4px solid #999;background:#f9f9f9;padding:14px 18px;margin:22px 0;box-shadow:0 1px 1px rgba(0,0,0,.05);} 
+.callout-warn{border-color:#e74c3c;}
+.callout-info{border-color:#0d6efd;}
+
+/* small tweaks */
+pre code{font-size:0.9em;}
+small.caption{color:#777;}
+</style>
+```
+
+<!-- ============================================================================ -->
+
 ## TL;DR
 
+::: tldr-box
 -   **Live app:** \<`r params$app_url`\>\
 -   **Code & data pipeline:** \<`r params$repo_url`\>\
 -   **Doc site (this page):** \<`r params$project_site`\>
 
-This project maps routine GP appointment waits (days) and elective hospital RTT waits (weeks) by Integrated Care Board (ICB) and Acute Trust in England. It helps patients, clinicians, and commissioners explore where access to care is faster or slower.
+<p>This project maps routine GP appointment waits (days) and elective hospital RTT waits (weeks) by Integrated Care Board (ICB) and Acute Trust in England. It helps patients, clinicians, and commissioners explore where access to care is faster or slower.</p>
+:::
 
-------------------------------------------------------------------------
+<hr class="section-split"/>
 
-## 1. Why I built this
+## Why I built this
 
-Living with and managing chronic conditions means that **continuity and timeliness of care** really matter. Getting a GP appointment quickly can be the difference between a minor flare‑up and a hospital admission; picking an acute Trust with shorter RTT waits can speed access to diagnostics and treatment.
+Living with and managing chronic conditions means that continuity and timeliness of care really matter. Getting a GP appointment quickly can be the difference between a minor flare‑up and a hospital admission; picking an acute Trust with shorter RTT waits can speed access to diagnostics and treatment.
 
 This tool:
 
--   Shows **where waits are shortest/longest**, by treatment function.\
--   Lets you **switch between median waits, 95th percentile, or % within 18 weeks**.\
--   Highlights **GP practice wait times** so people can search and compare primary care access.
+-   Shows where waits are shortest/longest, by treatment function.\
+-   Lets you switch between median waits, 95th percentile, or % within 18 weeks.\
+-   Highlights GP practice wait times so people can search and compare primary care access.
 
-------------------------------------------------------------------------
+<hr class="section-split"/>
 
-## 2. What’s in the app
+## What’s in the app
 
 ### Data layers
 
--   **ICB / Trust heatmaps** (elective RTT waits). Acute trusts (hospitals) do not have a defined catchment area, instead this shows an estimated NHS Acute Trust catchment area by elective hospital admissions created by the Office for Health Improvement and Disparities (OHID) in 2022.\
--   **GP markers** (average wait for routine GP appointments, in days).
+-   ICB / Trust heatmaps (elective RTT waits). Acute trusts (hospitals) do not have a defined catchment area, instead this shows an estimated NHS Acute Trust catchment area by elective hospital admissions created by the Office for Health Improvement and Disparities (OHID) in 2022.\
+-   GP markers (average wait for routine GP appointments, in days).
 
 ### Interactions
 
@@ -68,31 +98,31 @@ This tool:
 -   Pop‑ups on click; “Reset view” button.\
 -   Collapsible “How to use” & “Interpretation & Licensing” sections.
 
-------------------------------------------------------------------------
+<hr class="section-split"/>
 
-## 3. Data pipeline (summary)
+## Data pipeline (summary)
 
 Full code lives in `scripts/`. High-level steps:
 
-1.  **GP appointments (NHSE “Appointments in General Practice” - March to May 2025)**
+1.  GP appointments (NHSE “Appointments in General Practice” - March to May 2025)
     -   Only *Attended* appointments wait times were kept.
     -   Restricted appointment types to “General Consultation Routine” and “Walk‑in”.
     -   Dropped appointments where the wait time was “Unknown / Data Issue”.
     -   Converted wait time bands to mid‑points (e.g. seen between 2–7 days to 4.5 days); computed weighted mean & SD per practice.
     -   Joined to epraccur & ONS Postcode Directory for postcodes and Lat / Long coordinates.
-2.  **Hospital RTT waits (NHS England monthly “Full CSV” files, January to May 2025)**
+2.  Hospital RTT waits (NHS England monthly “Full CSV” files, January to May 2025)
     -   Utilised waiting time data only from Completed Pathways for Non‑Admitted Patients.
     -   Reshaped week bands data and calculated median wait, 95th percentile wait and % of patients seen within 18 weeks for each Provider Parent (ICB) & Provider (Trust).
-3.  **Geographies**
-    -   **ICB boundaries** (GeoJSON) from NIHR: <https://nihr.opendatasoft.com/explore/dataset/icb-boundaries/export/>
-    -   **Acute Trust shapefile** (FPTP elective catchments) from the Office for Health Improvement and Disparities (OHID) <https://www.eastsussexjsna.org.uk/resources/nhs-acute-hospital-trust-catchment-populations/>
+3.  Geographies
+    -   ICB boundaries (GeoJSON) from NIHR: <https://nihr.opendatasoft.com/explore/dataset/icb-boundaries/export/>
+    -   Acute Trust shapefile (FPTP elective catchments) from the Office for Health Improvement and Disparities (OHID) <https://www.eastsussexjsna.org.uk/resources/nhs-acute-hospital-trust-catchment-populations/>
     -   GP points mapped directly using postcode centroid Lat/Long point.
-4.  **Outputs**
+4.  Outputs
     -   Saved as RDS in `output_data/`: `appointment_data.rds`, `nhs_wait_icb.rds`, `nhs_wait_trusts.rds`.
 
-------------------------------------------------------------------------
+<hr class="section-split"/>
 
-## 4. Data suppression & interpretation
+## Data suppression & interpretation
 
 ### Suppression rules
 
@@ -100,14 +130,14 @@ Full code lives in `scripts/`. High-level steps:
 
 ### Reading the colours
 
--   **Median & 95th percentile waits:** darker = longer waits.\
--   **% within 18 weeks:** reversed scale; darker = lower % of patient seen within 18 weeks.
+-   Median & 95th percentile waits: darker = longer waits.\
+-   \% within 18 weeks: reversed scale; darker = lower % of patient seen within 18 weeks.
 
-> These are **aggregated stats**, not individual waits. They indicate system performance, not guaranteed personal wait times.
+> These are aggregated stats, not individual waits. They indicate system performance, not guaranteed personal wait times.
 
-------------------------------------------------------------------------
+<hr class="section-split"/>
 
-## 5. Manual download step (Trust shapefile)
+## Manual download step (Trust shapefile)
 
 One dataset cannot be scripted (hosting/licence):
 
@@ -119,11 +149,11 @@ One dataset cannot be scripted (hosting/licence):
 
 The app stops with a helpful error if these files are missing.
 
-------------------------------------------------------------------------
+<hr class="section-split"/>
 
-## 6. Reproduce locally
+## Reproduce locally
 
-### 6.1 Clone & restore packages
+### Clone & restore packages
 
 ``` r
 git clone `r params$repo_url`
@@ -131,59 +161,56 @@ cd nhs-wait-times-explorer
 renv::restore()
 ```
 
-### 6.2 Run the data pipeline
+### Run the data pipeline
 
 ``` r
 source("scripts/load_and_transform.R")
 ```
 
-(Or drop prebuilt RDS files into `Output_Data/`.)
+(Or drop prebuilt RDS files into `output_data/`.)
 
-### 6.3 Launch the app
+### Launch the app
 
 ``` r
 shiny::runApp("app")
 ```
 
-------------------------------------------------------------------------
+<hr class="section-split"/>
 
-## 7. Deploying the Shiny app
+## Deploying the Shiny app
 
 -   **shinyapps.io:** `rsconnect::deployApp("app")`\
--   **Posit Connect / Shiny Server:** copy the `app/` folder; ensure `Output_Data/` is available or regenerated.
+-   **Posit Connect / Shiny Server:** copy the `app/` folder; ensure `output_data/` is available or regenerated.
 
-------------------------------------------------------------------------
+<hr class="section-split"/>
 
-## 8. Licensing
+## Licensing
 
 -   **Code:** GNU GPL v3.0 (see `LICENSE`).\
 -   **Data & derived summaries:** Open Government Licence v3.0 (see `LICENSE-OGL-DATA.md`).\
     Please credit NHS England / NHS Digital / DHSC when re‑using.
 
-------------------------------------------------------------------------
+<hr class="section-split"/>
 
-## 9. Screenshots / preview *(TBA)*
+## Screenshots / preview *(TBA)*
 
 ```{r echo=FALSE, out.width="100%"}
 # knitr::include_graphics("figs/icb_median_example.png")
 ```
 
-------------------------------------------------------------------------
+<hr class="section-split"/>
 
-## 10. Contact / feedback
+## Contact / feedback
 
 Spotted an error? Feature idea?
 
 -   Open an issue: \<`r params$repo_url`/issues\>
 
-------------------------------------------------------------------------
+<hr class="section-split"/>
 
 ### Appendix: Handy links
 
 -   [NHS RTT statistics portal](https://www.england.nhs.uk/statistics/statistical-work-areas/rtt-waiting-times/rtt-data-2025-26/)\
-
 -   [NHSE “Appointments in General Practice”](https://digital.nhs.uk/data-and-information/publications/statistical/appointments-in-general-practice/may-2025)\
-
--   [ONS Postcode Directory](https://geoportal.statistics.gov.uk/datasets/3be72478d8454b59bb86ba97b4ee325b)
-
--   [Epraccur and other GP related data files](https://digital.nhs.uk/services/organisation-data-service/data-search-and-export/csv-downloads/gp-and-gp-practice-related-data)\
+-   [ONS Postcode Directory](https://geoportal.statistics.gov.uk/datasets/3be72478d8454b59bb86ba97b4ee325b)\
+-   [Epraccur and other GP related data files](https://digital.nhs.uk/services/organisation-data-service/data-search-and-export/csv-downloads/gp-and-gp-practice-related-data)
