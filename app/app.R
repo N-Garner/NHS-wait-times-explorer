@@ -58,7 +58,12 @@ library(rmapshaper)
 library(scales)          
 library(stringr)         
 library(glue)            
-library(data.table)   
+library(data.table)
+
+# # Adding for tracking logging usage / errors 
+# library(shinylogs)
+# library(googlesheets4)
+# library(jsonlite)
 
 # ── 1. DATA ───────────────────────────────────────────────────────────
 # Load in GP appointment wait data
@@ -183,56 +188,73 @@ howto_html <- HTML('
 </div>
 ')
 
+# # No data log is collected at this time 
+# log_to_gsheet <- function(data){
+#   #  Could drop columns I don’t want to keep
+#   # data <- subset(data, select = -c(input$search_text))
+#   
+#   # append timestamp
+#   data$logged_at <- Sys.time()
+#   googlesheets4::sheet_append(Sys.getenv("GSHEET_ID"), data)
+# }
+
 # ── 2. UI ─────────────────────────────────────────────────────────────
-ui <- page_sidebar(
-  title    = "NHS Wait Times Explorer",
-  theme    = bs_theme(version = 5),
-  fillable = TRUE,                     # <- lets the main area fill the page
+ui <- tagList(
+  shinylogs::use_tracking(),   # injects JS to capture inputs/events
   
-  # ---- Collapsible sidebar ----
-  sidebar = sidebar(
-    id          = "controls",
-    width       = 320,
-    position    = "left",
-    open        = TRUE,                # start open
-    collapsible = TRUE,                # <- hamburger toggle
-    
-    selectInput("specialty", "Treatment function (RTT):",
-                choices = specialties, selected = specialties[1]),
-    
-    radioButtons("boundary_layer", "Boundary layer:",
-                 choices = c("ICB heatmap" = "icb",
-                             "Acute Trust heatmap" = "trust",
-                             "None" = "none"),
-                 selected = "icb"),
-    
-    radioButtons("metric", "Heatmap metric:",
-                 choices = c("Median wait (weeks)"       = "MedianWaitWeeks",
-                             "95th percentile (weeks)"   = "P95WaitWeeks",
-                             "% within 18 weeks"         = "PercentWithin18Weeks"),
-                 selected = "MedianWaitWeeks"),
-    
-    checkboxInput("show_gp",    "Show GP markers",    FALSE),
-    checkboxInput("cluster_gp", "Cluster GP markers", TRUE),
-    
-    sliderInput("gp_wait_range", "Filter GP Avg wait (days):",
-                min = 0, max = 40, value = c(0, 40), step = 1),
-    
-    actionButton("reset_view", "Reset map view", class = "btn btn-sm btn-secondary"),
-    actionLink("show_help", label = "How to use this map", icon = icon("question-circle"))
-  ),
-  
-  # ---- Main content ----
-  div(style = "height:80vh; width:100%;",
-      leafletOutput("map", height = "100%", width = "100%")
-  ),
-  uiOutput("info_text"),
-  wellPanel(uiOutput("about_block"))
+  page_sidebar(
+    title    = "NHS Wait Times Explorer",
+    theme    = bs_theme(version = 5),
+    fillable = TRUE,
+    sidebar = sidebar(
+      id          = "controls",
+      width       = 320,
+      position    = "left",
+      open        = TRUE,
+      collapsible = TRUE,
+      selectInput("specialty", "Treatment function (RTT):",
+                  choices = specialties, selected = specialties[1]),
+      radioButtons("boundary_layer", "Boundary layer:",
+                   choices = c("ICB heatmap" = "icb",
+                               "Acute Trust heatmap" = "trust",
+                               "None" = "none"),
+                   selected = "icb"),
+      radioButtons("metric", "Heatmap metric:",
+                   choices = c("Median wait (weeks)"       = "MedianWaitWeeks",
+                               "95th percentile (weeks)"   = "P95WaitWeeks",
+                               "% within 18 weeks"         = "PercentWithin18Weeks"),
+                   selected = "MedianWaitWeeks"),
+      checkboxInput("show_gp",    "Show GP markers",    FALSE),
+      checkboxInput("cluster_gp", "Cluster GP markers", TRUE),
+      sliderInput("gp_wait_range", "Filter GP Avg wait (days):",
+                  min = 0, max = 40, value = c(0, 40), step = 1),
+      actionButton("reset_view", "Reset map view", class = "btn btn-sm btn-secondary"),
+      actionLink("show_help", label = "How to use this map", icon = icon("question-circle"))
+    ),
+    div(style = "height:80vh; width:100%;",
+        leafletOutput("map", height = "100%", width = "100%")
+    ),
+    uiOutput("info_text"),
+    wellPanel(uiOutput("about_block"))
+  )
 )
 
 # ── 3. SERVER ─────────────────────────────────────────────────────────
 server <- function(input, output, session) {
   
+  # No logged data is collected at this time 
+  # # authenticate to Google Sheets using a service account JSON stored in an env var
+  # gs4_auth(jsonlite::fromJSON(Sys.getenv("GCP_SA_JSON"), simplifyVector = FALSE))
+  # 
+  # shinylogs::track_usage(
+  #   storage_mode  = "function",
+  #   save_function = log_to_gsheet
+  # )
+  # 
+  # # Log JS errors too
+  # shinylogs::track_errors()
+  
+  # Start of visable UI
   icb_spec <- reactive({
     met <- rtt_icb[.(input$specialty),
                    .(icb23nm, TotalPatients, MedianWaitWeeks,
