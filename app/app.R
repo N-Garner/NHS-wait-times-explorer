@@ -380,7 +380,7 @@ server <- function(input, output, session) {
             "Postcode: ", Postcode, "<br/>",
             "Avg wait: ", round(AvgWaitDays,1), " days<br/>",
             "SD: ", round(SDWaitDays,1), " days<br/>",
-            "Appointments (period): ", comma(TotalAppts), "<br/>",
+            "# of appointments: ", comma(TotalAppts), "<br/>",
             "ICB: ", icbnm_simp
           ),
           group       = "GP",
