@@ -16,5 +16,14 @@ When re-using these data, please attribute the original sources as described in 
 
 
 
+* NHS England Referral to Treatment waiting times (© NHS England)
+* NHS England/NHS Digital “Appointments in General Practice” (© NHS England)
+* NHS ODS epraccur (© NHS England)
+* ONS Postcode Directory (Contains National Statistics data © ONS; Contains OS data © Crown copyright and database right 2025; Contains Royal Mail data © Royal Mail copyright and database right 2025; Contains GeoPlace data © GeoPlace LLP)
+* ICB boundary GeoJSON (© Crown copyright)
+* DHSC FPTP elective trust shapefiles (© Crown copyright)
+
+
+
 Code in this repository is licensed under the GNU GPL v3.0 (see LICENSE).
 
