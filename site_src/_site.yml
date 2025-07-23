@@ -5,12 +5,12 @@ navbar:
   left:
     - text: "Home"
       href: index.html
-    - text: "Methodology"
-      href: methodology.html
-    - text: "Data & Licences"
-      href: data-sources.html
-    - text: "How to run"
-      href: how-to-run.html
+#    - text: "Methodology"
+#      href: methodology.html
+#    - text: "Data & Licences"
+#      href: data-sources.html
+#    - text: "How to run"
+#      href: how-to-run.html
 output:
   html_document:
     theme: cosmo
