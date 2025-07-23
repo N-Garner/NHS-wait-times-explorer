@@ -1,0 +1,19 @@
+name: "NHS Wait Times Explorer"
+output_dir: "../docs"     # render into docs/ for GitHub Pages
+navbar:
+  title: "NHS Wait Times Explorer"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Methodology"
+      href: methodology.html
+    - text: "Data & Licences"
+      href: data-sources.html
+    - text: "How to run"
+      href: how-to-run.html
+output:
+  html_document:
+    theme: cosmo
+    toc: true
+    toc_float: true
+    code_folding: show
