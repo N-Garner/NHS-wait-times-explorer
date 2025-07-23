@@ -15,7 +15,7 @@ output:
     df_print: paged
     number_sections: true
 params:
-  app_url: "https://YOURACCOUNT.shinyapps.io/nhs-wait-times-explorer/" # Need to add this in later
+  app_url: "https://n-garner.shinyapps.io/nhs-wait-times-explorer/"
   repo_url: "https://github.com/N-Garner/NHS-wait-times-explorer"
   project_site: "https://n-garner.github.io/NHS-wait-times-explorer/"
   manual_zip_url: "https://app.box.com/s/qh8gzpzeo1firv1ezfxx2e6c4tgtrudl/folder/170910088405"
