@@ -29,9 +29,6 @@ An R/Shiny project mapping non-acute GP appointment wait times and Consultant-le
 
 Jump to the live app, browse the docs for methods and licensing, or clone the repo to run locally.
 
-## Screenshot
-
-
 ## How to run locally
 
 ```r
