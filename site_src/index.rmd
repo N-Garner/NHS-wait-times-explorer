@@ -58,26 +58,30 @@ small.caption{color:#777;}
 
 <!-- ============================================================================ -->
 
-## TL;DR
+## Quick Overview
 
 ::: tldr-box
--   **Live app:** \<`r params$app_url`\>\
--   **Code & data pipeline:** \<`r params$repo_url`\>\
--   **Doc site (this page):** \<`r params$project_site`\>
+Live app: `r params$app_url`
 
-<p>This project maps routine GP appointment waits (days) and elective hospital RTT waits (weeks) by Integrated Care Board (ICB) and Acute Trust in England. It helps patients, clinicians, and commissioners explore where access to care is faster or slower.</p>
+Code & data pipeline: `r params$repo_url`
+
+Doc site (this page): `r params$project_site`
+
+<p>This project maps routine GP appointment waits (days) and elective hospital Referral To Treatment (RTT) waits (weeks) by Integrated Care Board (ICB) and acute Trust in England. It helps patients, clinicians, and commissioners explore where access to care is faster or slower.</p>
 :::
 
 <hr class="section-split"/>
 
 ## Why I built this
 
-Living with and managing chronic conditions means that continuity and timeliness of care really matter. Getting a GP appointment quickly can be the difference between a minor flare‑up and a hospital admission; picking an acute Trust with shorter RTT waits can speed access to diagnostics and treatment.
+Living with and managing chronic conditions means that continuity and timeliness of care really matter. Getting a GP appointment and/or a specialist referral quickly can be the difference between a minor flare‑up and an emergency hospital admission. Picking a GP with low waiting times within the catchment area of an Integrated Care Board and acute Trust with shorter referral to treatment (RTT) wait times can substantially speed up access to diagnostics and treatment.
+
+While all of the data used in this project is available publicly, garnering this information as an individual is time consuming and requires the ability to handle and interpret large health-related data sets. I built an easy-to-use shiny app that enables anyone to quickly understand their likely referral to treatment times across England for the main healthcare specialty areas, and to find a general practice (GP) within each ICB with low wait times for general consults.
 
 This tool:
 
--   Shows where waits are shortest/longest, by treatment function.\
--   Lets you switch between median waits, 95th percentile, or % within 18 weeks.\
+-   Shows where wait times are shortest and longest by specialty (treatment function).
+-   Lets you switch heat map views between median waits, 95th percentile wait, or % of patients seen within 18 weeks of waiting.
 -   Highlights GP practice wait times so people can search and compare primary care access.
 
 <hr class="section-split"/>
@@ -96,7 +100,7 @@ This tool:
 -   Show/hide GP practices, filter by median wait time.\
 -   Search for GP names.\
 -   Pop‑ups on click; “Reset view” button.\
--   Collapsible “How to use” & “Interpretation & Licensing” sections.
+-   Collapsible “How to use & Interpretation & Licensing” sections.
 
 <hr class="section-split"/>
 
