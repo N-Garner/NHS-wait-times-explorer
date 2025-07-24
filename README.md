@@ -1,6 +1,15 @@
 # NHS Wait Times Explorer
 An R/Shiny project mapping non-acute GP appointment wait times and Consultant-led Referral To Treatment (RTT) waiting times across England.
 
+![ICB median wait heatmap + Average GP wait time markers](site_src/img/Example.png)
+
+## Quick Links:
+**🚀 Live app:** https://n-garner.shinyapps.io/nhs-wait-times-explorer/ 
+
+**🤓 Code & data pipeline (this page):** https://github.com/N-Garner/NHS-wait-times-explorer 
+
+**📘 Documentation website:** https://n-garner.github.io/NHS-wait-times-explorer/
+
 ## Introduction
 
 **The NHS Wait Times Explorer** is a Shiny app and reproducible R project that maps how long people wait to see a GP and to start elective (non‑admitted) hospital treatment across England. I built it because continuous access to care is critical for people living with chronic conditions. Delays at any step (getting a GP appointment, getting referred, starting treatment) can mean poorer outcomes in both the short term and long term. This tool helps patients, clinicians, and planners quickly spot where access is faster, so they can aim referrals or self‑registration toward organisations with shorter waits.
@@ -18,16 +27,10 @@ An R/Shiny project mapping non-acute GP appointment wait times and Consultant-le
 - Colour by **Median wait**, **95th percentile**, or **% treated within 18 weeks** (with sensible palette direction).  
 - Show/hide **~6000 GP practices**, filter by average wait (days), cluster markers, and search by name.  
 
-Jump to the live app (link coming), browse the docs for methods and licensing, or clone the repo to run locally.
+Jump to the live app, browse the docs for methods and licensing, or clone the repo to run locally.
 
-## Repo structure
+## Screenshot
 
-- `scripts/` – data download & transformation.
-- `app/` – Shiny app (`app.R`).
-- `docs/` – rendered R Markdown site (GitHub Pages).
-- `renv/` & `renv.lock` – reproducible R environment.
-
----
 
 ## How to run locally
 
