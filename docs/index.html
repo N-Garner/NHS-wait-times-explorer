@@ -11,7 +11,7 @@
 
 <meta name="author" content="Nicholas Garner" />
 
-<meta name="date" content="2025-07-23" />
+<meta name="date" content="2025-07-24" />
 
 <title>NHS Wait Times Explorer</title>
 
@@ -354,7 +354,7 @@ div.tocify {
 Consultant-led Referral To Treatment (RTT) waiting times across
 England.</h3>
 <h4 class="author">Nicholas Garner</h4>
-<h4 class="date">23 July 2025</h4>
+<h4 class="date">24 July 2025</h4>
 
 </div>
 
@@ -382,27 +382,23 @@ pre code{font-size:0.9em;}
 small.caption{color:#777;}
 </style>
 <!-- ============================================================================ -->
-<div id="tldr" class="section level2" number="1">
-<h2><span class="header-section-number">1</span> TL;DR</h2>
+<div id="quick-overview" class="section level2" number="1">
+<h2><span class="header-section-number">1</span> Quick Overview</h2>
 <div class="tldr-box">
-<ul>
-<li><strong>Live app:</strong> &lt;<a
-href="https://n-garner.shinyapps.io/nhs-wait-times-explorer/\"
-class="uri">https://n-garner.shinyapps.io/nhs-wait-times-explorer/\</a>&gt;<br />
-</li>
-<li><strong>Code &amp; data pipeline:</strong> &lt;<a
-href="https://github.com/N-Garner/NHS-wait-times-explorer\"
-class="uri">https://github.com/N-Garner/NHS-wait-times-explorer\</a>&gt;<br />
-</li>
-<li><strong>Doc site (this page):</strong> &lt;<a
-href="https://n-garner.github.io/NHS-wait-times-explorer/\"
-class="uri">https://n-garner.github.io/NHS-wait-times-explorer/\</a>&gt;</li>
-</ul>
+<p>Live app: <a
+href="https://n-garner.shinyapps.io/nhs-wait-times-explorer/"
+class="uri">https://n-garner.shinyapps.io/nhs-wait-times-explorer/</a></p>
+<p>Code &amp; data pipeline: <a
+href="https://github.com/N-Garner/NHS-wait-times-explorer"
+class="uri">https://github.com/N-Garner/NHS-wait-times-explorer</a></p>
+<p>Doc site (this page): <a
+href="https://n-garner.github.io/NHS-wait-times-explorer/"
+class="uri">https://n-garner.github.io/NHS-wait-times-explorer/</a></p>
 <p>
 This project maps routine GP appointment waits (days) and elective
-hospital RTT waits (weeks) by Integrated Care Board (ICB) and Acute
-Trust in England. It helps patients, clinicians, and commissioners
-explore where access to care is faster or slower.
+hospital Referral To Treatment (RTT) waits (weeks) by Integrated Care
+Board (ICB) and acute Trust in England. It helps patients, clinicians,
+and commissioners explore where access to care is faster or slower.
 </p>
 </div>
 <hr class="section-split"/>
@@ -410,17 +406,25 @@ explore where access to care is faster or slower.
 <div id="why-i-built-this" class="section level2" number="2">
 <h2><span class="header-section-number">2</span> Why I built this</h2>
 <p>Living with and managing chronic conditions means that continuity and
-timeliness of care really matter. Getting a GP appointment quickly can
-be the difference between a minor flare‑up and a hospital admission;
-picking an acute Trust with shorter RTT waits can speed access to
-diagnostics and treatment.</p>
+timeliness of care really matter. Getting a GP appointment and/or a
+specialist referral quickly can be the difference between a minor
+flare‑up and an emergency hospital admission. Picking a GP with low
+waiting times within the catchment area of an Integrated Care Board and
+acute Trust with shorter referral to treatment (RTT) wait times can
+substantially speed up access to diagnostics and treatment.</p>
+<p>While all of the data used in this project is available publicly,
+garnering this information as an individual is time consuming and
+requires the ability to handle and interpret large health-related data
+sets. I built an easy-to-use shiny app that enables anyone to quickly
+understand their likely referral to treatment times across England for
+the main healthcare specialty areas, and to find a general practice (GP)
+within each ICB with low wait times for general consults.</p>
 <p>This tool:</p>
 <ul>
-<li>Shows where waits are shortest/longest, by treatment function.<br />
-</li>
-<li>Lets you switch between median waits, 95th percentile, or % within
-18 weeks.<br />
-</li>
+<li>Shows where wait times are shortest and longest by specialty
+(treatment function).</li>
+<li>Lets you switch heat map views between median waits, 95th percentile
+wait, or % of patients seen within 18 weeks of waiting.</li>
 <li>Highlights GP practice wait times so people can search and compare
 primary care access.</li>
 </ul>
@@ -453,7 +457,7 @@ by the Office for Health Improvement and Disparities (OHID) in
 </li>
 <li>Pop‑ups on click; “Reset view” button.<br />
 </li>
-<li>Collapsible “How to use” &amp; “Interpretation &amp; Licensing”
+<li>Collapsible “How to use &amp; Interpretation &amp; Licensing”
 sections.</li>
 </ul>
 <hr class="section-split"/>
