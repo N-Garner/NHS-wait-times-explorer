@@ -196,10 +196,30 @@ shiny::runApp("app")
 
 <hr class="section-split"/>
 
-## Screenshots / preview *(TBA)*
+## Preview screenshots
+
+Median RTT wait times by ICB for dermatology services around London, overlayed with individual GP wait times
 
 ```{r echo=FALSE, out.width="100%"}
-# knitr::include_graphics("figs/icb_median_example.png")
+knitr::include_graphics("img/Example.png")
+```
+
+Percent of patients seen within 18 weeks for gynaecology services across England by ICB region
+
+```{r echo=FALSE, out.width="100%"}
+knitr::include_graphics("img/Example2.png")
+```
+
+95th percentile RTT wait times (95% of patients seen within x weeks) by acute trust for gynaecology services across south London.
+
+```{r echo=FALSE, out.width="100%"}
+knitr::include_graphics("img/Example3.png")
+```
+
+A view of average GP wait times across England when GP markers are not clustered, with median wait times for all treatment specialties averaged by ICB in the background.
+
+```{r echo=FALSE, out.width="100%"}
+knitr::include_graphics("img/Example4.png")
 ```
 
 <hr class="section-split"/>
