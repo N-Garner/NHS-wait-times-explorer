@@ -2,13 +2,7 @@
 
 
 
-Datasets from NHS England / NHS Digital / DHSC included in this repo are © Crown copyright and
-
-used under the Open Government Licence v3.0.
-
-
-
-See: [https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/)
+Datasets from NHS England / NHS Digital / DHSC included in this repo are © Crown copyright and used under the Open Government Licence v3.0. See: [https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/)
 
 
 
