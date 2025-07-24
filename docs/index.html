@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Nicholas Garner" />
+
+<meta name="date" content="2025-07-23" />
+
+<title>NHS Wait Times Explorer</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">NHS Wait Times Explorer</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">NHS Wait Times Explorer</h1>
+<h3 class="subtitle">Non-acute GP appointment wait times and
+Consultant-led Referral To Treatment (RTT) waiting times across
+England.</h3>
+<h4 class="author">Nicholas Garner</h4>
+<h4 class="date">23 July 2025</h4>
+
+</div>
+
+
+<!-- ===================== CUSTOM STYLES ===================== -->
+<style>
+body{font-size:16px;line-height:1.55;color:#333;}
+h1.title{margin-bottom:.25em;}
+.subtitle{color:#6c757d;margin-bottom:1.5em;}
+
+/* nicer horizontal rules between sections */
+hr.section-split{border:0;border-top:1px solid #e5e5e5;margin:40px 0 32px;}
+
+/* TLDR box */
+.tldr-box{background:#f8f9fa;border-left:4px solid #0d6efd;padding:14px 18px;margin:20px 0 28px;box-shadow:0 1px 2px rgba(0,0,0,.05);} 
+.tldr-box ul{margin-bottom:0;}
+
+/* callouts for interpretation/suppression if desired */
+.callout{border-left:4px solid #999;background:#f9f9f9;padding:14px 18px;margin:22px 0;box-shadow:0 1px 1px rgba(0,0,0,.05);} 
+.callout-warn{border-color:#e74c3c;}
+.callout-info{border-color:#0d6efd;}
+
+/* small tweaks */
+pre code{font-size:0.9em;}
+small.caption{color:#777;}
+</style>
+<!-- ============================================================================ -->
+<div id="tldr" class="section level2" number="1">
+<h2><span class="header-section-number">1</span> TL;DR</h2>
+<div class="tldr-box">
+<ul>
+<li><strong>Live app:</strong> &lt;<a
+href="https://n-garner.shinyapps.io/nhs-wait-times-explorer/\"
+class="uri">https://n-garner.shinyapps.io/nhs-wait-times-explorer/\</a>&gt;<br />
+</li>
+<li><strong>Code &amp; data pipeline:</strong> &lt;<a
+href="https://github.com/N-Garner/NHS-wait-times-explorer\"
+class="uri">https://github.com/N-Garner/NHS-wait-times-explorer\</a>&gt;<br />
+</li>
+<li><strong>Doc site (this page):</strong> &lt;<a
+href="https://n-garner.github.io/NHS-wait-times-explorer/\"
+class="uri">https://n-garner.github.io/NHS-wait-times-explorer/\</a>&gt;</li>
+</ul>
+<p>
+This project maps routine GP appointment waits (days) and elective
+hospital RTT waits (weeks) by Integrated Care Board (ICB) and Acute
+Trust in England. It helps patients, clinicians, and commissioners
+explore where access to care is faster or slower.
+</p>
+</div>
+<hr class="section-split"/>
+</div>
+<div id="why-i-built-this" class="section level2" number="2">
+<h2><span class="header-section-number">2</span> Why I built this</h2>
+<p>Living with and managing chronic conditions means that continuity and
+timeliness of care really matter. Getting a GP appointment quickly can
+be the difference between a minor flare‑up and a hospital admission;
+picking an acute Trust with shorter RTT waits can speed access to
+diagnostics and treatment.</p>
+<p>This tool:</p>
+<ul>
+<li>Shows where waits are shortest/longest, by treatment function.<br />
+</li>
+<li>Lets you switch between median waits, 95th percentile, or % within
+18 weeks.<br />
+</li>
+<li>Highlights GP practice wait times so people can search and compare
+primary care access.</li>
+</ul>
+<hr class="section-split"/>
+</div>
+<div id="whats-in-the-app" class="section level2" number="3">
+<h2><span class="header-section-number">3</span> What’s in the app</h2>
+<div id="data-layers" class="section level3" number="3.1">
+<h3><span class="header-section-number">3.1</span> Data layers</h3>
+<ul>
+<li>ICB / Trust heatmaps (elective RTT waits). Acute trusts (hospitals)
+do not have a defined catchment area, instead this shows an estimated
+NHS Acute Trust catchment area by elective hospital admissions created
+by the Office for Health Improvement and Disparities (OHID) in
+2022.<br />
+</li>
+<li>GP markers (average wait for routine GP appointments, in days).</li>
+</ul>
+</div>
+<div id="interactions" class="section level3" number="3.2">
+<h3><span class="header-section-number">3.2</span> Interactions</h3>
+<ul>
+<li>Toggle ICB vs Trust polygons (one at a time).<br />
+</li>
+<li>Pick a heatmap metric (Median / 95th / %≤18w).<br />
+</li>
+<li>Show/hide GP practices, filter by median wait time.<br />
+</li>
+<li>Search for GP names.<br />
+</li>
+<li>Pop‑ups on click; “Reset view” button.<br />
+</li>
+<li>Collapsible “How to use” &amp; “Interpretation &amp; Licensing”
+sections.</li>
+</ul>
+<hr class="section-split"/>
+</div>
+</div>
+<div id="data-pipeline-summary" class="section level2" number="4">
+<h2><span class="header-section-number">4</span> Data pipeline
+(summary)</h2>
+<p>Full code lives in <code>scripts/</code>. High-level steps:</p>
+<ol style="list-style-type: decimal">
+<li>GP appointments (NHSE “Appointments in General Practice” - March to
+May 2025)
+<ul>
+<li>Only <em>Attended</em> appointments wait times were kept.</li>
+<li>Restricted appointment types to “General Consultation Routine” and
+“Walk‑in”.</li>
+<li>Dropped appointments where the wait time was “Unknown / Data
+Issue”.</li>
+<li>Converted wait time bands to mid‑points (e.g. seen between 2–7 days
+to 4.5 days); computed weighted mean &amp; SD per practice.</li>
+<li>Joined to epraccur &amp; ONS Postcode Directory for postcodes and
+Lat / Long coordinates.</li>
+</ul></li>
+<li>Hospital RTT waits (NHS England monthly “Full CSV” files, January to
+May 2025)
+<ul>
+<li>Utilised waiting time data only from Completed Pathways for
+Non‑Admitted Patients.</li>
+<li>Reshaped week bands data and calculated median wait, 95th percentile
+wait and % of patients seen within 18 weeks for each Provider Parent
+(ICB) &amp; Provider (Trust).</li>
+</ul></li>
+<li>Geographies
+<ul>
+<li>ICB boundaries (GeoJSON) from NIHR: <a
+href="https://nihr.opendatasoft.com/explore/dataset/icb-boundaries/export/"
+class="uri">https://nihr.opendatasoft.com/explore/dataset/icb-boundaries/export/</a></li>
+<li>Acute Trust shapefile (FPTP elective catchments) from the Office for
+Health Improvement and Disparities (OHID) <a
+href="https://www.eastsussexjsna.org.uk/resources/nhs-acute-hospital-trust-catchment-populations/"
+class="uri">https://www.eastsussexjsna.org.uk/resources/nhs-acute-hospital-trust-catchment-populations/</a></li>
+<li>GP points mapped directly using postcode centroid Lat/Long
+point.</li>
+</ul></li>
+<li>Outputs
+<ul>
+<li>Saved as RDS in <code>output_data/</code>:
+<code>appointment_data.rds</code>, <code>nhs_wait_icb.rds</code>,
+<code>nhs_wait_trusts.rds</code>.</li>
+</ul></li>
+</ol>
+<hr class="section-split"/>
+</div>
+<div id="data-suppression-interpretation" class="section level2"
+number="5">
+<h2><span class="header-section-number">5</span> Data suppression &amp;
+interpretation</h2>
+<div id="suppression-rules" class="section level3" number="5.1">
+<h3><span class="header-section-number">5.1</span> Suppression
+rules</h3>
+<ul>
+<li>All data is publicly available and provided as a de-identified
+aggregate, therefore no additional data suppression was applied.</li>
+</ul>
+</div>
+<div id="reading-the-colours" class="section level3" number="5.2">
+<h3><span class="header-section-number">5.2</span> Reading the
+colours</h3>
+<ul>
+<li>Median &amp; 95th percentile waits: darker = longer waits.<br />
+</li>
+<li>% within 18 weeks: reversed scale; darker = lower % of patient seen
+within 18 weeks.</li>
+</ul>
+<blockquote>
+<p>These are aggregated stats, not individual waits. They indicate
+system performance, not guaranteed personal wait times.</p>
+</blockquote>
+<hr class="section-split"/>
+</div>
+</div>
+<div id="manual-download-step-trust-shapefile" class="section level2"
+number="6">
+<h2><span class="header-section-number">6</span> Manual download step
+(Trust shapefile)</h2>
+<p>One dataset cannot be scripted (hosting/licence):</p>
+<pre class="text"><code>1. Open: https://app.box.com/s/qh8gzpzeo1firv1ezfxx2e6c4tgtrudl/folder/170910088405
+2. Download the ZIP containing “2022Elective_FPTP_Full”
+3. Extract into: C:\Users\Nick\Documents\GitHub\NHS-wait-times-explorer\site_src\output_data\2022Elective_FPTP_Full</code></pre>
+<p>The app stops with a helpful error if these files are missing.</p>
+<hr class="section-split"/>
+</div>
+<div id="reproduce-locally" class="section level2" number="7">
+<h2><span class="header-section-number">7</span> Reproduce locally</h2>
+<div id="clone-restore-packages" class="section level3" number="7.1">
+<h3><span class="header-section-number">7.1</span> Clone &amp; restore
+packages</h3>
+<pre class="r"><code>git clone https://github.com/N-Garner/NHS-wait-times-explorer
+cd nhs-wait-times-explorer
+renv::restore()</code></pre>
+</div>
+<div id="run-the-data-pipeline" class="section level3" number="7.2">
+<h3><span class="header-section-number">7.2</span> Run the data
+pipeline</h3>
+<pre class="r"><code>source(&quot;scripts/load_and_transform.R&quot;)</code></pre>
+<p>(Or drop prebuilt RDS files into <code>output_data/</code>.)</p>
+</div>
+<div id="launch-the-app" class="section level3" number="7.3">
+<h3><span class="header-section-number">7.3</span> Launch the app</h3>
+<pre class="r"><code>shiny::runApp(&quot;app&quot;)</code></pre>
+<hr class="section-split"/>
+</div>
+</div>
+<div id="deploying-the-shiny-app" class="section level2" number="8">
+<h2><span class="header-section-number">8</span> Deploying the Shiny
+app</h2>
+<ul>
+<li><strong>shinyapps.io:</strong>
+<code>rsconnect::deployApp("app")</code><br />
+</li>
+<li><strong>Posit Connect / Shiny Server:</strong> copy the
+<code>app/</code> folder; ensure <code>output_data/</code> is available
+or regenerated.</li>
+</ul>
+<hr class="section-split"/>
+</div>
+<div id="licensing" class="section level2" number="9">
+<h2><span class="header-section-number">9</span> Licensing</h2>
+<ul>
+<li><strong>Code:</strong> GNU GPL v3.0 (see
+<code>LICENSE</code>).<br />
+</li>
+<li><strong>Data &amp; derived summaries:</strong> Open Government
+Licence v3.0 (see <code>LICENSE-OGL-DATA.md</code>).<br />
+Please credit NHS England / NHS Digital / DHSC when re‑using.</li>
+</ul>
+<hr class="section-split"/>
+</div>
+<div id="screenshots-preview-tba" class="section level2" number="10">
+<h2><span class="header-section-number">10</span> Screenshots / preview
+<em>(TBA)</em></h2>
+<hr class="section-split"/>
+</div>
+<div id="contact-feedback" class="section level2" number="11">
+<h2><span class="header-section-number">11</span> Contact /
+feedback</h2>
+<p>Spotted an error? Feature idea?</p>
+<ul>
+<li>Open an issue: &lt;<a
+href="https://github.com/N-Garner/NHS-wait-times-explorer/issues\"
+class="uri">https://github.com/N-Garner/NHS-wait-times-explorer/issues\</a>&gt;</li>
+</ul>
+<hr class="section-split"/>
+<div id="appendix-handy-links" class="section level3" number="11.1">
+<h3><span class="header-section-number">11.1</span> Appendix: Handy
+links</h3>
+<ul>
+<li><a
+href="https://www.england.nhs.uk/statistics/statistical-work-areas/rtt-waiting-times/rtt-data-2025-26/">NHS
+RTT statistics portal</a><br />
+</li>
+<li><a
+href="https://digital.nhs.uk/data-and-information/publications/statistical/appointments-in-general-practice/may-2025">NHSE
+“Appointments in General Practice”</a><br />
+</li>
+<li><a
+href="https://geoportal.statistics.gov.uk/datasets/3be72478d8454b59bb86ba97b4ee325b">ONS
+Postcode Directory</a><br />
+</li>
+<li><a
+href="https://digital.nhs.uk/services/organisation-data-service/data-search-and-export/csv-downloads/gp-and-gp-practice-related-data">Epraccur
+and other GP related data files</a></li>
+</ul>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
